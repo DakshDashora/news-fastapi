@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>News Assistant</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1>News Assistant</h1>
+
+  <label for="article">Paste your news article or text below:</label>
+  <textarea id="article" placeholder="Enter article text here..."></textarea>
+
+  <div class="buttons">
+    <button onclick="sendRequest('summarize')">Summarize</button>
+    <button onclick="sendRequest('explain')">Explain</button>
+    <button onclick="sendRequest('factcheck')">Fact Check</button>
+  </div>
+
+  <h3>Result:</h3>
+  <div id="result">Result will appear here...</div>
+
+  <script src="script.js"></script>
+</body>
+</html>
