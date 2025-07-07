@@ -1,38 +1,371 @@
-body {
-  font-family: Arial, sans-serif;
-  background: #f7f7f7;
-  padding: 20px;
-  max-width: 700px;
-  margin: auto;
+#logo {
+ height: 60px;
+  max-width: 120px;         /* Optional */
+  object-fit: contain; 
 }
 
-h1 {
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #e0eafc, #cfdef3);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  transition: background 0.5s ease, color 0.5s ease;
+}
+
+.app-container {
+  width: 100%;
+  max-width: 950px;
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  padding: 40px;
+  transition: background 0.5s ease;
+}
+
+header {
   text-align: center;
+  margin-bottom: 30px;
+}
+header h1 {
+  font-size: 2.4rem;
+  color: #2c3e50;
+}
+header p {
+  color: #7f8c8d;
+  font-size: 1rem;
+  margin-top: 8px;
+}
+#toggle-dark {
+  margin-top: 15px;
+  padding: 8px 16px;
+  background: #3498db;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
 }
 
 textarea {
   width: 100%;
-  height: 150px;
-  padding: 10px;
+  height: 160px;
+  padding: 15px;
+  border-radius: 12px;
+  border: 1px solid #ccc;
   font-size: 1rem;
+  background: #f8fafd;
+  margin-bottom: 20px;
 }
 
-.buttons {
-  margin: 10px 0;
+textarea:focus {
+  outline: none;
+  border-color: #3498db;
+}
+
+.action-panel {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
+
+.action-card {
+  flex: 1;
+  min-width: 200px;
+  background: #f5f9ff;
+  padding: 20px;
+  border-radius: 12px;
   text-align: center;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: 0.3s;
+}
+.action-card img {
+  width: 60px;
+  height: 60px;
+  margin-bottom: 10px;
+}
+.action-card:hover {
+  background: #eaf3fb;
+  border-color: #3498db;
+  transform: translateY(-4px);
+}
+.action-card.selected {
+  background: #3498db;
+  color: white;
+  border-color: #3498db;
 }
 
+.hidden {
+  display: none;
+}
 button {
-  margin: 5px;
-  padding: 10px 20px;
+  background-color: #3498db;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
   font-size: 1rem;
   cursor: pointer;
 }
+button:hover {
+  background-color: #2980b9;
+}
 
-#result {
-  background: #fff;
-  padding: 15px;
+.spinner {
+  border: 4px solid #eee;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  margin: 20px auto;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  gap: 10px;
+}
+
+/* Style for Generate button */
+.generate-btn {
+  background-color: #3498db; /* Bootstrap Blue */
+  color: white;
+  padding: 10px 18px;
+  border: none;
   border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.generate-btn:hover {
+  background-color: #2980b9;
+}
+
+
+
+/* Style for Change Option button */
+.change-btn {
+  background-color: #3498db;
+  color: white;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.change-btn:hover {
+  background-color: #0056b3;
+}
+
+
+
+.result-section {
+  margin-top: 30px;
+}
+#result {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
   white-space: pre-wrap;
-  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+  font-size: 1rem;
+  color: #333;
+}
+
+.result-actions {
+  margin-top: 15px;
+  display: flex;
+  gap: 10px;
+}
+
+/* Dark Mode */
+body.dark {
+  background: linear-gradient(135deg, #1e1e1e, #2e2e2e);
+  color: #f0f0f0;
+}
+
+body.dark .app-container {
+  background: #2a2a2a;
+}
+
+body.dark textarea,
+body.dark #result {
+  background: #1f1f1f;
+  color: #f0f0f0;
+  border-color: #444;
+}
+
+body.dark .action-card {
+  background: #3a3a3a;
+  color: #f0f0f0;
+}
+
+body.dark .action-card.selected {
+  background: #4a90e2;
+}
+
+body.dark h1,
+body.dark h2,
+body.dark h3,
+body.dark p,
+body.dark a {
+  color: #f0f0f0;
+}
+
+body.dark button {
+  background-color: #4a90e2;
+  color: white;
+}
+
+#toggle-mode {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  float: right;
+  margin-top: -45px;
+  color: #2c3e50;
+  transition: color 0.3s ease;
+}
+
+.dark-mode #toggle-mode {
+  color: #ecf0f1;
+}
+body.dark #change-option-btn {
+  background-color: #e67e22;
+  color: white;
+}
+body.dark #change-option-btn:hover {
+  background-color: #d35400;
+}
+
+.change-option-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 15px;
+}
+
+#change-option-btn {
+  background-color: #3498db;      /* Same as your primary blue */
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  font-size: 0.95rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#change-option-btn:hover {
+  background-color: #2980b9;      /* Darker blue on hover */
+}
+
+/* Dark mode version */
+body.dark #change-option-btn {
+  background-color: #4a90e2;
+  color: white;
+}
+
+body.dark #change-option-btn:hover {
+  background-color: #357ab7;
+}
+
+/* Responsive Design Enhancements */
+@media (max-width: 1024px) {
+  .app-container {
+    padding: 30px;
+  }
+
+  header h1 {
+    font-size: 2rem;
+  }
+
+  header p {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .action-panel {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .action-card {
+    width: 100%;
+  }
+
+  .button-group {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .generate-btn,
+  .change-btn {
+    width: 100%;
+    padding: 12px;
+  }
+
+  .result-actions {
+    flex-direction: column;
+  }
+
+  #logo {
+    height: 50px;
+    max-width: 100px;
+  }
+
+  textarea {
+    height: 140px;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-container {
+    padding: 20px;
+  }
+
+  header h1 {
+    font-size: 1.6rem;
+  }
+
+  #toggle-dark {
+    padding: 6px 12px;
+    font-size: 0.9rem;
+  }
+
+  textarea {
+    height: 120px;
+  }
+
+  .generate-btn,
+  .change-btn {
+    font-size: 0.95rem;
+    padding: 10px;
+  }
+
+  #result {
+    font-size: 0.95rem;
+  }
 }
