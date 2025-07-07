@@ -1,6 +1,6 @@
 const backendUrl = "https://news-fastapi-production.up.railway.app";
 let currentMode = "";
-
+let currentInputType = "text";
 function selectMode(mode) {
   currentMode = mode;
   document.getElementById("mode-title").style.display = "none";
@@ -29,6 +29,18 @@ function selectMode(mode) {
   }, 100);
 }
 
+
+function selectInputType(type) {
+currentInputType = type;
+document.getElementById("text-input").classList.add("hidden");
+document.getElementById("url-input").classList.add("hidden");
+document.getElementById("image-input").classList.add("hidden");
+
+if (type === "text") document.getElementById("text-input").classList.remove("hidden");
+if (type === "url") document.getElementById("url-input").classList.remove("hidden");
+if (type === "image") document.getElementById("image-input").classList.remove("hidden");
+}
+
 function changeOption() {
   currentMode = "";
   document.getElementById("mode-title").style.display = "block";
@@ -44,35 +56,73 @@ function changeOption() {
 }
 
 async function generate() {
-  const content = document.getElementById("article").value.trim();
-  if (!currentMode || !content) {
-    alert("Please select an option and enter content.");
-    return;
+const result = document.getElementById("result");
+const resultSection = document.getElementById("result-section");
+const spinner = document.getElementById("spinner");
+
+result.textContent = "";
+spinner.classList.remove("hidden");
+resultSection.classList.remove("hidden");
+
+try {
+let content = "";
+
+
+if (currentInputType === "text") {
+  content = document.getElementById("article").value.trim();
+
+} else if (currentInputType === "url") {
+  const url = document.getElementById("url-field").value.trim();
+
+  const res = await fetch(`${backendUrl}/extract`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ content: url })
+  });
+
+  const data = await res.json();
+  content = data.extracted || "";
+
+} else if (currentInputType === "image") {
+  const fileInput = document.getElementById("image-file");
+
+  if (!fileInput.files.length) {
+    throw new Error("No image file selected.");
   }
 
-  const spinner = document.getElementById("spinner");
-  const result = document.getElementById("result");
-  const resultSection = document.getElementById("result-section");
+  const formData = new FormData();
+  formData.append("file", fileInput.files[0]);
 
-  result.textContent = "";
-  spinner.classList.remove("hidden");
-  resultSection.classList.remove("hidden");
+  const res = await fetch(`${backendUrl}/image-to-text`, {
+    method: "POST",
+    body: formData
+  });
 
-  try {
-    const res = await fetch(`${backendUrl}/${currentMode}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ content })
-    });
-
-    const data = await res.json();
-    result.textContent = data.summary || data.explanation || data.claims || "✅ Done";
-  } catch (err) {
-    result.textContent = "❌ Error: " + err.message;
-  } finally {
-    spinner.classList.add("hidden");
-  }
+  const data = await res.json();
+  content = data.extracted || "";
 }
+
+if (!currentMode || !content) {
+  result.textContent = "⚠️ Could not process input.";
+  return;
+}
+
+const res2 = await fetch(`${backendUrl}/${currentMode}`, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ content })
+});
+
+const data = await res2.json();
+result.textContent = data.summary || data.explanation || data.claims || "✅ Done";
+} 
+catch (err) {
+result.textContent = "❌ Error: " + err.message;
+} finally {
+spinner.classList.add("hidden");
+}
+}
+
 
 function copyResult() {
   const text = document.getElementById("result").textContent;
