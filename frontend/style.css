@@ -369,3 +369,18 @@ body.dark #change-option-btn:hover {
     font-size: 0.95rem;
   }
 }
+
+.input-type-toggle {
+display: flex;
+gap: 20px;
+justify-content: center;
+margin: 10px 0;
+font-weight: bold;
+}
+.input-type-toggle label {
+cursor: pointer;
+}
+.dynamic-input {
+margin: 10px 0;
+}
+
