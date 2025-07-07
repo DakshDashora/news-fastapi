@@ -3,23 +3,59 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>News Assistant</title>
+  <title>News Synth</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>News Assistant</h1>
+  <div class="app-container">
+    <header>
+      <img src="images/logo.jpg" alt="Logo" id="logo">
+      <h1>News Synth</h1>
+      <p>Understand, verify, and simplify news content instantly</p>
+      <button id="toggle-dark" onclick="toggleDarkMode()">🌙 Dark Mode</button>
+    </header>
 
-  <label for="article">Paste your news article or text below:</label>
-  <textarea id="article" placeholder="Enter article text here..."></textarea>
+    <h2 id="mode-title">Choose an option</h2>
+    <div class="action-panel" id="action-panel">
+      <div class="action-card" onclick="selectMode('summarize')">
+        <h2>📝 Summarize</h2>
+        <p>Get a short summary</p>
+      </div>
+      <div class="action-card" onclick="selectMode('explain')">
+        <h2>💡 Explain</h2>
+        <p>Understand complex terms</p>
+      </div>
+      <div class="action-card" onclick="selectMode('factcheck')">
+        <h2>🔍 Fact Check</h2>
+        <p>Verify authenticity</p>
+      </div>
+    </div>
 
-  <div class="buttons">
-    <button onclick="sendRequest('summarize')">Summarize</button>
-    <button onclick="sendRequest('explain')">Explain</button>
-    <button onclick="sendRequest('factcheck')">Fact Check</button>
+    <div class="input-section hidden" id="input-section">
+      <h2 id="input-heading">Enter your article</h2>
+      <textarea id="article" placeholder="Paste your article or news content here..."></textarea>
+
+      <!-- Button Group -->
+      <!-- Inside input-section -->
+<div class="button-group">
+  <button class="generate-btn" onclick="generate()">🚀 Generate</button>
+  <button class="change-btn" onclick="changeOption()" id="change-option-btn">🔄 Change Option</button>
+</div>
+
+    </div>
+
+    <div class="spinner hidden" id="spinner"></div>
+
+    <div class="result-section hidden" id="result-section">
+      <h3>🧾 Result</h3>
+      <div id="result">Your processed output will appear here...</div>
+      <div class="result-actions">
+        <button onclick="copyResult()">📋 Copy</button>
+        <button onclick="exportResult('txt')">💾 Export TXT</button>
+        <button onclick="exportResult('pdf')">📄 Export PDF</button>
+      </div>
+    </div>
   </div>
-
-  <h3>Result:</h3>
-  <div id="result">Result will appear here...</div>
 
   <script src="script.js"></script>
 </body>
