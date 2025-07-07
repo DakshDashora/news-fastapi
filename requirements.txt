@@ -1,6 +1,8 @@
 fastapi
-uvicorn
-newspaper3k
+uvicorn[standard]
 pillow
 pytesseract
+newspaper3k
+lxml[html_clean]
 groq
+python-multipart
