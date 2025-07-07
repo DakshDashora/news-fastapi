@@ -1,8 +1,11 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from groq import Groq
-import os
+from newspaper import Article
+from PIL import Image
+import pytesseract
+import io
+import os 
 
 app = FastAPI()
 
@@ -63,3 +66,36 @@ async def fact_check(data: ArticleInput):
         return {"claims": result}
     except Exception as e:
         return {"error": str(e)}
+
+@app.post("/extract")
+async def extract_from_url(data: ArticleInput):
+    try:
+        article = Article(data.content)
+        article.download()
+
+        # PATCH: Set browser-like user-agent if content is empty
+        if article.html is None or article.html.strip() == "":
+            import requests
+            headers = {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                              "AppleWebKit/537.36 (KHTML, like Gecko) "
+                              "Chrome/114.0.0.0 Safari/537.36"
+            }
+            html = requests.get(data.content, headers=headers).text
+            article.set_html(html)
+
+        article.parse()
+        return {"extracted": article.text}
+
+    except Exception as e:
+        return {"error": f"Failed to extract content: {str(e)}"}
+    
+@app.post("/image-to-text")
+async def extract_text_from_image(file: UploadFile = File(...)):
+    try:
+        image_data = await file.read()
+        image = Image.open(io.BytesIO(image_data))
+        extracted_text = pytesseract.image_to_string(image)
+        return {"extracted": extracted_text.strip()}
+    except Exception as e:
+        return {"error": f"Failed to extract text from image: {str(e)}"}
