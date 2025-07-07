@@ -1,4 +1,6 @@
 fastapi
 uvicorn
+newspaper3k
+pillow
+pytesseract
 groq
-python-dotenv
