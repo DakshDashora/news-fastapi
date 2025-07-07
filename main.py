@@ -6,6 +6,7 @@ from PIL import Image
 import pytesseract
 import io
 import os 
+from groq import Groq
 
 app = FastAPI()
 
