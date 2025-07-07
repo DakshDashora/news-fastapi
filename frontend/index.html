@@ -31,18 +31,30 @@
       </div>
     </div>
 
-    <div class="input-section hidden" id="input-section">
-      <h2 id="input-heading">Enter your article</h2>
-      <textarea id="article" placeholder="Paste your article or news content here..."></textarea>
-
-      <!-- Button Group -->
-      <!-- Inside input-section -->
-<div class="button-group">
-  <button class="generate-btn" onclick="generate()">🚀 Generate</button>
-  <button class="change-btn" onclick="changeOption()" id="change-option-btn">🔄 Change Option</button>
-</div>
-
-    </div>
+   <div class="input-section hidden" id="input-section"> 
+    <h2 id="input-heading">Enter your article</h2> 
+    <!-- Input Type Toggle --> 
+    <div class="input-type-toggle"> 
+      <label><input type="radio" name="inputType" value="text" checked onchange="selectInputType('text')"> Text</label> 
+      <label><input type="radio" name="inputType" value="url" onchange="selectInputType('url')"> URL</label> 
+      <label><input type="radio" name="inputType" value="image" onchange="selectInputType('image')"> Image</label> 
+    </div> 
+    <!-- Dynamic Input Fields --> 
+    <div class="dynamic-input" id="text-input"> 
+      <textarea id="article" placeholder="Paste your article or news content here..."></textarea> 
+    </div> 
+    <div class="dynamic-input hidden" id="url-input"> 
+      <input type="text" id="url-field" placeholder="Paste article URL here..." /> 
+    </div> 
+    <div class="dynamic-input hidden" id="image-input"> 
+      <input type="file" id="image-file" accept="image/*" /> 
+    </div> 
+    <!-- Button Group --> 
+    <div class="button-group"> 
+      <button class="generate-btn" onclick="generate()">🚀 Generate</button> 
+      <button class="change-btn" onclick="changeOption()" id="change-option-btn">🔄 Change Option</button> 
+    </div> 
+  </div>
 
     <div class="spinner hidden" id="spinner"></div>
 
