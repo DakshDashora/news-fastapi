@@ -103,10 +103,11 @@ if (currentInputType === "text") {
   content = data.extracted || "";
 }
 
-if (!currentMode || !content) {
-  result.textContent = "⚠️ Could not process input.";
-  return;
-}
+ if (!currentMode || !content) 
+ {
+      result.textContent = "⚠️ Could not extract article content. Try another link or paste the text manually.";
+      return;
+ } 
 
 const res2 = await fetch(`${backendUrl}/${currentMode}`, {
   method: "POST",
