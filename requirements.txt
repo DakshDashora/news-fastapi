@@ -6,3 +6,4 @@ newspaper3k
 lxml[html_clean]
 groq
 python-multipart
+beautifulsoup4
