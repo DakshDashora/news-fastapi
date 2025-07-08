@@ -8,6 +8,8 @@ import io
 import os 
 from groq import Groq
 import ast
+from bs4 import BeautifulSoup
+import requests
 
 app = FastAPI()
 
@@ -69,28 +71,37 @@ async def fact_check(data: ArticleInput):
     except Exception as e:
         return {"error": str(e)}
 
+
+
 @app.post("/extract")
 async def extract_from_url(data: ArticleInput):
     try:
+        headers = {
+            "User-Agent": (
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                "AppleWebKit/537.36 (KHTML, like Gecko) "
+                "Chrome/114.0.0.0 Safari/537.36"
+            )
+        }
+
+        html = requests.get(data.content, headers=headers).text
+
+        # Use BeautifulSoup to remove cookie banners and similar overlays
+        soup = BeautifulSoup(html, "html.parser")
+        for tag in soup.find_all(["div", "section"], class_=lambda x: x and any(keyword in x.lower() for keyword in ["cookie", "ads", "ad", "sponsored", "overlay", "popup", "modal"])):
+            tag.decompose()
+
+        cleaned_html = str(soup)
+
         article = Article(data.content)
-        article.download()
-
-        # PATCH: Set browser-like user-agent if content is empty
-        if article.html is None or article.html.strip() == "":
-            import requests
-            headers = {
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-                              "AppleWebKit/537.36 (KHTML, like Gecko) "
-                              "Chrome/114.0.0.0 Safari/537.36"
-            }
-            html = requests.get(data.content, headers=headers).text
-            article.set_html(html)
-
+        article.set_html(cleaned_html)
         article.parse()
+
         return {"extracted": article.text}
 
     except Exception as e:
         return {"error": f"Failed to extract content: {str(e)}"}
+
     
 @app.post("/image-to-text")
 async def extract_text_from_image(file: UploadFile = File(...)):
