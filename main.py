@@ -100,3 +100,17 @@ async def extract_text_from_image(file: UploadFile = File(...)):
         return {"extracted": extracted_text.strip()}
     except Exception as e:
         return {"error": f"Failed to extract text from image: {str(e)}"}
+
+
+class ContextRequest(BaseModel):
+    term: str
+
+@app.post("/context")
+async def get_context(data: ContextRequest):
+    try:
+        prompt = f"Explain the following historical or political term briefly and clearly (1–3 lines max): {data.term}"
+        explanation = llama3_chat(prompt)
+        return {"term": data.term, "explanation": explanation}
+    except Exception as e:
+        return {"error": f"Failed to fetch context: {str(e)}"}
+
