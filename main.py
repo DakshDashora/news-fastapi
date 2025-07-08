@@ -7,6 +7,7 @@ import pytesseract
 import io
 import os 
 from groq import Groq
+import ast
 
 app = FastAPI()
 
@@ -113,4 +114,25 @@ async def get_context(data: ContextRequest):
         return {"term": data.term, "explanation": explanation}
     except Exception as e:
         return {"error": f"Failed to fetch context: {str(e)}"}
+
+
+# Assuming llama3_chat and groq_client already exist
+
+class ContextRequest(BaseModel):
+    text: str
+
+@app.post("/context-terms")
+async def extract_context_terms(data: ContextRequest):
+    prompt = (
+        "From the following text, extract and return a list of only political, legal, or historical terms "
+        "that may need background explanation. Respond with a Python list of strings only.\n\n"
+        f"{data.text}"
+    )
+    try:
+        response = llama3_chat(prompt)
+        terms = ast.literal_eval(response)  # convert string to list safely
+        return {"terms": terms}
+    except Exception as e:
+        return {"error": str(e)}
+
 
