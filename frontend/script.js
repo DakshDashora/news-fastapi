@@ -55,7 +55,8 @@ function changeOption() {
   document.getElementById("article").value = "";
 }
 
-async function generate() {
+async function generate() 
+{
 const result = document.getElementById("result");
 const resultSection = document.getElementById("result-section");
 const spinner = document.getElementById("spinner");
@@ -114,7 +115,21 @@ const res2 = await fetch(`${backendUrl}/${currentMode}`, {
 });
 
 const data = await res2.json();
-result.textContent = data.summary || data.explanation || data.claims || "✅ Done";
+const raw = data.summary || data.explanation || data.claims || "✅ Done";
+
+// Try to fetch context terms
+try {
+  const termRes = await fetch(`${backendUrl}/context-terms`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ text: raw })
+  });
+  const termData = await termRes.json();
+  result.innerHTML = highlightTerms(raw, termData.terms || []);
+} catch {
+  result.textContent = raw;
+}
+
 } 
 catch (err) {
 result.textContent = "❌ Error: " + err.message;
@@ -158,3 +173,41 @@ function toggleDarkMode() {
     toggleBtn.innerText = "🌙 Dark Mode";
   }
 }
+
+function highlightTerms(text, terms) {
+  terms.forEach(term => {
+    const regex = new RegExp(`\\b(${escapeRegExp(term)})\\b`, 'gi');
+    text = text.replace(regex, `<span class="context-term" onclick="showContext('$1')">$1</span>`);
+  });
+  return text;
+}
+
+function escapeRegExp(string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+async function showContext(term) {
+  const tooltip = document.createElement("div");
+  tooltip.className = "tooltip-box";
+  tooltip.innerText = "⏳ Loading...";
+
+  document.body.appendChild(tooltip);
+  const { top, left } = event.target.getBoundingClientRect();
+  tooltip.style.top = `${top + window.scrollY + 25}px`;
+  tooltip.style.left = `${left + window.scrollX}px`;
+
+  try {
+    const res = await fetch(`${backendUrl}/context`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ term })
+    });
+    const data = await res.json();
+    tooltip.innerText = data.explanation || "No context found.";
+  } catch (err) {
+    tooltip.innerText = "⚠️ Failed to load context.";
+  }
+
+  setTimeout(() => tooltip.remove(), 6000);
+}
+
