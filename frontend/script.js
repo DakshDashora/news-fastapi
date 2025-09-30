@@ -1,4 +1,4 @@
-const backendUrl = "https://news-fastapi-production.up.railway.app";
+const backendUrl = "https://news-fastapi-wah6.onrender.com";
 let currentMode = "";
 let currentInputType = "text";
 function selectMode(mode) {
@@ -211,4 +211,5 @@ async function showContext(term) {
 
   setTimeout(() => tooltip.remove(), 6000);
 }
+
 
